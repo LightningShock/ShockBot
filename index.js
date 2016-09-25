@@ -7,7 +7,7 @@ var fs = require("fs");
 var owner_obj = {};
 var starts = 0;
 var client_id = "";
-const loginToken = "TOKEN";
+var loginToken = "TOKEN";
 fs.readFile("./token.json", function(error, data) {
     if (error) {
         console.log(error);
