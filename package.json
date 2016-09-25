@@ -1,0 +1,15 @@
+{
+  "name": "LightningBot",
+  "version": "1.0.0",
+  "description": "Discord bot written in node.js using the Discord.js infrastructure",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kaden Silveira",
+  "license": "GNU",
+  "dependencies": {
+    "discord.js": "^9.2.0",
+    "ytdl-core": "^0.7.18"
+  }
+}
