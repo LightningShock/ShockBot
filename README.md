@@ -10,4 +10,6 @@ _I will add email in the fututure, shouldn't take long_
 ` $ node index.js `
 Tada!
 
+
+Official LightningBot Discord server: 
 [![Discord](https://discordapp.com/api/guilds/226858944235044864/embed.png)](https://discord.gg/qaMMdFa)
