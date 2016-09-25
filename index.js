@@ -7,14 +7,16 @@ var fs = require("fs");
 var owner_obj = {};
 var starts = 0;
 var client_id = "";
-const loginToken = fs.readFile("./token.json", function(data, error) {
+const loginToken = "TOKEN";
+fs.readFile("./token.json", function(error, data) {
     if (error) {
+        console.log(error);
         log.error("Login Token File Missing");
         log.error("to fix do npm token your_token_here");
         process.exit(1);
     }
-    return JSON.parse(data.token);
-    
+    loginToken = JSON.parse(data).token;
+    client.login(loginToken).then(output);
 }); 
 
 const ytdl = require('ytdl-core');

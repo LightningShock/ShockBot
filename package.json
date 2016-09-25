@@ -4,7 +4,7 @@
   "description": "Discord bot written in node.js using the Discord.js infrastructure",
   "main": "index.js",
   "scripts": {
-    "setup":"node setup.js --token "
+    "setup":"npm install && node setup.js --token "
   },
   "author": "Kaden S",
   "license": "GNU",
