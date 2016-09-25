@@ -6,10 +6,16 @@ var owner = "YOUR_ID_HERE";
 var fs = require("fs");
 var owner_obj = {};
 var starts = 0;
-
-const loginToken = "YOUR_TOKEN_HERE"; //from discordapp.com/developers/applications/me
-const client_id = "CLIENT_ID_HERE";
-
+var client_id = "";
+const loginToken = fs.readFile("./token.json", function(data, error) {
+    if (error) {
+        log.error("Login Token File Missing");
+        log.error("to fix do npm token your_token_here");
+        process.exit(1);
+    }
+    return JSON.parse(data.token);
+    
+}); 
 
 const ytdl = require('ytdl-core');
 const streamOptions = {
@@ -63,7 +69,7 @@ client.on('message', function(message) {
         var args = msg.a.split(" ");
         var cmd = args[0].toLowerCase();
         //private messages only read if owner
-        if(message.author.id === client.user.id) return;
+        if (message.author.id === client.user.id) return;
         if (msg.p.id == owner) {
             /*if (cmd == char + "js") {
                 try {
@@ -120,7 +126,7 @@ client.on('message', function(message) {
                 msg.p.sendMessage("You must be in a guild to do that!");
                 return;
             }
-            if(!_connectable) return;
+            if (!_connectable) return;
             VoiceChannel.join();
         }
         if (cmd == char + "p-yt") {
@@ -210,7 +216,8 @@ function output(token) {
     }
     else {
         log.info('Logged in. Token: ' + token);
+        client_id = token;
+        log.log("https://discordapp.com/oauth2/authorize?client_id=" + client_id + "&scope=bot&permissions=8");
     }
 }
 client.login(loginToken).then(output);
-log.log("https://discordapp.com/oauth2/authorize?client_id="+client_id+"&scope=bot&permissions=8");
