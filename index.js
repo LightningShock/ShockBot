@@ -155,7 +155,7 @@ client.on('message', function(message) {
                 if (!args[1]) {
 
                     msg.ch.sendMessage("setting volume to 100%");
-                    vC.setVolume(1);
+                    vC.player.dispatcher.setVolume(1);
                     return;
 
                 }
@@ -165,7 +165,7 @@ client.on('message', function(message) {
                 }
                 else { //no prams makes it 100
                     msg.ch.sendMessage("Setting volume to " + vol + "%");
-                    vC.setVolume(vol / 100);
+                    vC.player.dispatcher.setVolume(vol / 100);
                 }
             });
         }
