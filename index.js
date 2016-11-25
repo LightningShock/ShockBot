@@ -17,7 +17,7 @@ fs.readFile("./token.json", function(error, data) {
     }
     loginToken = JSON.parse(data).token;
     client.login(loginToken).then(output);
-});
+}); 
 
 const ytdl = require('ytdl-core');
 const streamOptions = {
@@ -26,42 +26,12 @@ const streamOptions = {
 };
 
 
-//I suggest removing these later...
-process.on('unhandledRejection', (reason, p) => {
-    if (owner_obj.hasOwnProperty("status")) {
-        owner_obj.sendMessage(
-            "Promise error, Promise: " + JSON.stringify(p, null, 4) + ", error: " + reason
-        );
-    }
-    log.error("Promise error, Promise: " + p + ", error: " + reason);
-});
-process.on('uncaughtException', function(err) {
-    if (owner_obj.hasOwnProperty("status")) {
-        owner_obj.sendMessage(
-            "Caught Error: \n" +
-            err
-        );
-    }
-    log.error("caught error: \n" + err.stack);
-});
-
 
 client.on("error", function() {
     log.error("Disconnected at " + new Date() + " :(");
     process.exit(1);
 });
 client.on('message', function(message) {
-    //fs.writeFile("./messages/" + message.id + "message.json", JSON.stringify(message, null, 4));
-    /*if (message.content.indexOf(char) == 0) message.delete(1000);
-    if (message.author == client.user) {
-        if (!message.guild) {
-            return;
-        }
-        else {
-            message.delete(3000);
-            return
-        }
-    }*/
     if (message.content.indexOf(char) == -1) return;
     try {
         var msg = {};
@@ -121,58 +91,53 @@ client.on('message', function(message) {
         }
 
         //Voice Channel Commands
-        
+        var VoiceChannel = client.channels.get(message.member.voiceChannelID);
         var _connectable = message.member.voiceChannelID !== undefined;
-        
-        if (_connectable) {
-            var VoiceChannel = client.channels.get(message.member.voiceChannelID);
+        if (cmd == char + "join") { //joins voice channel
+            if (msg.ch.type == "dm") {
+                msg.p.sendMessage("You must be in a guild to do that!");
+                return;
+            }
+            if (!_connectable) return;
+            VoiceChannel.join();
+        }
+        if (cmd == char + "p-yt") {
 
-            if (cmd == char + "join") { //joins voice channel
-                if (msg.ch.type == "dm") {
-                    msg.p.sendMessage("You must be in a guild to do that!");
+            VoiceChannel.join().then((vC) => {
+                console.log(args);
+                const stream = ytdl(args[1], {
+                    filter: 'audioonly'
+                });
+                const dispatcher = vC.playStream(stream, streamOptions);
+            });
+
+        }
+        if (cmd == char + "stop") {
+            if (!_connectable) return;
+            VoiceChannel.join().then((vC) => {
+                vC.disconnect();
+            });
+        }
+        if (cmd == char + "volume" || cmd == char + "vol") { //raises or lowers the volume
+            if (!_connectable) return;
+            VoiceChannel.join().then((vC) => {
+
+                if (!args[1]) {
+
+                    msg.ch.sendMessage("setting volume to 100%");
+                    vC.player.dispatcher.setVolume(1);
                     return;
+
                 }
-                if (!_connectable) return;
-                VoiceChannel.join();
-            }
-            if (cmd == char + "p-yt") {
-
-                VoiceChannel.join().then((vC) => {
-                    console.log(args);
-                    const stream = ytdl(args[1], {
-                        filter: 'audioonly'
-                    });
-                    const dispatcher = vC.playStream(stream, streamOptions);
-                });
-
-            }
-            if (cmd == char + "stop") {
-                if (!_connectable) return;
-                VoiceChannel.join().then((vC) => {
-                    vC.disconnect();
-                });
-            }
-            if (cmd == char + "volume" || cmd == char + "vol") { //raises or lowers the volume
-                if (!_connectable) return;
-                VoiceChannel.join().then((vC) => {
-
-                    if (!args[1]) {
-
-                        msg.ch.sendMessage("setting volume to 100%");
-                        vC.player.dispatcher.setVolume(1);
-                        return;
-
-                    }
-                    var vol = parseInt(args[1], 10);
-                    if (vol >= 101 || 0 >= vol) { // if volume greater than 100 or if below 0
-                        msg.ch.sendMessage("Volume must be between 0 and 100");
-                    }
-                    else { //no prams makes it 100
-                        msg.ch.sendMessage("Setting volume to " + vol + "%");
-                        vC.player.dispatcher.setVolume(vol / 100);
-                    }
-                });
-            }
+                var vol = parseInt(args[1], 10);
+                if (vol >= 101 || 0 >= vol) { // if volume greater than 100 or if below 0
+                    msg.ch.sendMessage("Volume must be between 0 and 100");
+                }
+                else { //no prams makes it 100
+                    msg.ch.sendMessage("Setting volume to " + vol + "%");
+                    vC.player.dispatcher.setVolume(vol / 100);
+                }
+            });
         }
     }
     catch (err) {
@@ -227,4 +192,3 @@ function output(token) {
         log.log("https://discordapp.com/oauth2/authorize?client_id=" + client_id + "&scope=bot&permissions=8");
     }
 }
-client.login(loginToken).then(output);
