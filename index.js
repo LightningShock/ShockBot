@@ -17,7 +17,7 @@ fs.readFile("./token.json", function(error, data) {
     }
     loginToken = JSON.parse(data).token;
     client.login(loginToken).then(output);
-}); 
+});
 
 const ytdl = require('ytdl-core');
 const streamOptions = {
@@ -121,53 +121,58 @@ client.on('message', function(message) {
         }
 
         //Voice Channel Commands
-        var VoiceChannel = client.channels.get(message.member.voiceChannelID);
+        
         var _connectable = message.member.voiceChannelID !== undefined;
-        if (cmd == char + "join") { //joins voice channel
-            if (msg.ch.type == "dm") {
-                msg.p.sendMessage("You must be in a guild to do that!");
-                return;
-            }
-            if (!_connectable) return;
-            VoiceChannel.join();
-        }
-        if (cmd == char + "p-yt") {
+        
+        if (_connectable) {
+            var VoiceChannel = client.channels.get(message.member.voiceChannelID);
 
-            VoiceChannel.join().then((vC) => {
-                console.log(args);
-                const stream = ytdl(args[1], {
-                    filter: 'audioonly'
-                });
-                const dispatcher = vC.playStream(stream, streamOptions);
-            });
-
-        }
-        if (cmd == char + "stop") {
-            if (!_connectable) return;
-            VoiceChannel.join().then((vC) => {
-                vC.disconnect();
-            });
-        }
-        if (cmd == char + "volume" || cmd == char + "vol") { //raises or lowers the volume
-            if (!_connectable) return;
-            VoiceChannel.join().then((vC) => {
-
-                if (!args[1]) {
-
-                    msg.ch.sendMessage("setting volume to 100%");
-                    vC.player.dispatcher.setVolume(1);
+            if (cmd == char + "join") { //joins voice channel
+                if (msg.ch.type == "dm") {
+                    msg.p.sendMessage("You must be in a guild to do that!");
                     return;
+                }
+                if (!_connectable) return;
+                VoiceChannel.join();
+            }
+            if (cmd == char + "p-yt") {
 
-                }
-                var vol = parseInt(args[1], 10);
-                if (vol >= 101 || 0 >= vol) { // if volume greater than 100 or if below 0
-                    msg.ch.sendMessage("Volume must be between 0 and 100");
-                }
-                else { //no prams makes it 100
-                    msg.ch.sendMessage("Setting volume to " + vol + "%");
-                    vC.player.dispatcher.setVolume(vol / 100);
-                }
-            });
+                VoiceChannel.join().then((vC) => {
+                    console.log(args);
+                    const stream = ytdl(args[1], {
+                        filter: 'audioonly'
+                    });
+                    const dispatcher = vC.playStream(stream, streamOptions);
+                });
+
+            }
+            if (cmd == char + "stop") {
+                if (!_connectable) return;
+                VoiceChannel.join().then((vC) => {
+                    vC.disconnect();
+                });
+            }
+            if (cmd == char + "volume" || cmd == char + "vol") { //raises or lowers the volume
+                if (!_connectable) return;
+                VoiceChannel.join().then((vC) => {
+
+                    if (!args[1]) {
+
+                        msg.ch.sendMessage("setting volume to 100%");
+                        vC.player.dispatcher.setVolume(1);
+                        return;
+
+                    }
+                    var vol = parseInt(args[1], 10);
+                    if (vol >= 101 || 0 >= vol) { // if volume greater than 100 or if below 0
+                        msg.ch.sendMessage("Volume must be between 0 and 100");
+                    }
+                    else { //no prams makes it 100
+                        msg.ch.sendMessage("Setting volume to " + vol + "%");
+                        vC.player.dispatcher.setVolume(vol / 100);
+                    }
+                });
+            }
         }
     }
     catch (err) {
