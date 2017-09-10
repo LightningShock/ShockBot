@@ -4,12 +4,15 @@
   "description": "Discord bot written in node.js using the Discord.js infrastructure",
   "main": "index.js",
   "scripts": {
-    "setup":"npm install && node setup.js --token "
+    "setup": "npm install && node setup.js --token "
   },
   "author": "Kaden S",
   "license": "GNU",
   "dependencies": {
-    "discord.js": "^9.2.0",
-    "ytdl-core": "^0.7.18"
+    "anesidora": "^1.2.1",
+    "discord.js": "^11.1.0",
+    "node-opus": "^0.2.6",
+    "youtube-node": "^1.3.2",
+    "ytdl-core": "^0.7.24"
   }
 }

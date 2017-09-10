@@ -4,8 +4,7 @@ LightningBot
 ` $ node --version ` => v6.0.0
 # Install
 ` $ git clone https://github.com/Youtubrer/LightningBot.git `
-` $ npm run setup YOUR_TOKEN_HERE`
-_I will add email in the fututure, shouldn't take long_
+Edit index.js and edit in your bot token
 # Running
 ` $ node index.js `
 Tada!
